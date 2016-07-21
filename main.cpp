@@ -182,7 +182,7 @@ void process_slave_socket(int slave_socket)
         while (offset < sz)
         {
             // think not the best solution
-            sendfile(slave_socket, fd, &offset, sz - offset);
+            offset = sendfile(slave_socket, fd, &offset, sz - offset);
         }
 
         close(fd);
