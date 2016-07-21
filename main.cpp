@@ -18,7 +18,7 @@
 #include <ev.h>
 
 // Debug mode, a lot of debug print to std::cout
-#define HTTP_DEBUG
+//#define HTTP_DEBUG
 
 // send fd
 ssize_t sock_fd_write(int sock, void *buf, ssize_t buflen, int fd);
@@ -163,8 +163,22 @@ void process_slave_socket(int slave_socket)
     if (access(full_path.c_str(), F_OK) != -1)
     {
         // file exists, get its size
-        int fd = open(full_path.c_str(), O_RDONLY);
-        int sz = lseek(fd, 0, SEEK_END);;
+        //int fd = open(full_path.c_str(), O_RDONLY);
+        FILE *infile;
+        infile = fopen(full_path.c_str(), "rb");
+        
+        fseek(infile, 0, SEEK_END);
+        size_t sz = ftell(infile);
+        rewind(infile);
+        
+        char *buffer = (char*)malloc(sz * sizeof(char));
+        if (buffer == NULL) {
+            fclose(infile);
+            printf("Error allocating %d bytes.\n", sz * sizeof(char));
+            return;
+        }
+        size_t bytes_read = fread(buffer, sizeof(char), sz, infile);
+        fclose(infile);
 
         sprintf(reply, "HTTP/1.1 200 OK\r\n"
                        "Content-Type: text/html\r\n"
@@ -182,10 +196,11 @@ void process_slave_socket(int slave_socket)
         while (offset < sz)
         {
             // think not the best solution
-            offset = sendfile(slave_socket, fd, &offset, sz - offset);
+            offset = offset+send(slave_socket, buffer, sz-offset, MSG_NOSIGNAL);
+            //offset = sendfile(slave_socket, fd, &offset, sz - offset);
         }
 
-        close(fd);
+        //close(fd);
     }
     else
     {
