@@ -225,6 +225,8 @@ void process_slave_socket(int slave_socket)
         std::cout << "do_work: send return " << send_ret << std::endl;
 #   endif
     }
+    
+    close(slave_socket);
 }
 
 void do_work(struct ev_loop *loop, struct ev_io *w, int revents)
@@ -434,6 +436,13 @@ int main(int argc, char* argv[])
     {
         // worker 2 process
         printf("Worker 2 is about to return\n");
+        return 0;
+    }
+    
+    if (create_worker() == 0)
+    {
+        // worker 3 process
+        printf("Worker 3 is about to return\n");
         return 0;
     }
 
