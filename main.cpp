@@ -437,33 +437,6 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if (create_worker() == 0)
-    {
-        // worker 3 process
-        printf("Worker 3 is about to return\n");
-        return 0;
-    }
-
-    if (create_worker() == 0)
-    {
-        // worker 3 process
-        printf("Worker 3 is about to return\n");
-        return 0;
-    }
-
-    if (create_worker() == 0)
-    {
-        // worker 3 process
-        printf("Worker 3 is about to return\n");
-        return 0;
-    }
-
-    if (create_worker() == 0)
-    {
-        // worker 3 process
-        printf("Worker 3 is about to return\n");
-        return 0;
-    }
 
 
     //------------------------------------------------------//
